@@ -255,7 +255,10 @@ def collection_update(category, cname, length, last_n):
 	for key in ave:
 		#print key
 		if METRICS[category].has_key(key) and METRICS[category][key]['type'] != 'str':
-			ave[key] /= count
+			if ave[key] >= 0:
+				ave[key] /= count
+			else:
+				ave[key] = 0
 	db[cname].insert(ave)
 	data_fixed_length(cname, ave['unixSecondsUTC'], length)
 	if category == 'vm' and cname.split('_')[1] == '30':
@@ -342,9 +345,13 @@ def cpu_util(category, data, document):
 			cpu_total += data[metric] - document[metric]
 		for metric in cpu_metrics:
 			data[metric] = round((data[metric] - document[metric])/cpu_total*100, 2)
+			if data[metric] <0:
+				data[metric] == 0
 		return data
 	else:
 		data['vcpu_cpu_mS'] = round((data['vcpu_cpu_mS'] - document['vcpu_cpu_mS'])/((data['unixSecondsUTC'] - document['unixSecondsUTC'])*1000)*100, 2)
+		if data['vcpu_cpu_mS'] < 0:
+			data['vcpu_cpu_mS'] = 0
 		return data
 
 #处理COUNTER（累增）型的数据并插入数据库，调用数据聚合函数以及cluster更新函数
@@ -356,6 +363,8 @@ def data_process(category, data, condition):
 	for key in data:
 		if METRICS[category].has_key(key) and METRICS[category][key]['dst'] == 'COUNTER' :
 			data[key] = round((data[key] - document[key])/STEP, 2)
+			if data[key] < 0:
+				data[key] = 0
 	#如果是host或vm，则还需要将各种CPU时间转换成利用率
 	if category in ['host', 'vm']:
 		data = cpu_util(category, data, document)
