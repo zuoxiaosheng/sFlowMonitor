@@ -3,7 +3,7 @@
 import time
 import subprocess
 import sys
-CWD = '/root/Monitor/'
+CWD = '/root/Monitor/src/'
 sys.path.append(CWD)
 
 IPMITOOL = '/usr/bin/ipmitool'

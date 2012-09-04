@@ -5,7 +5,7 @@ import subprocess
 import time
 from config import db
 utc = int(time.time())
-CWD = '/root/Monitor/'
+CWD = '/root/Monitor/src/'
 scripts = os.listdir(CWD + 'scripts/')
 
 documents = {}
