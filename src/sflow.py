@@ -6,7 +6,7 @@ from db import logger, METRICS, data_convert, data_insert
 
 
 #sFlow相关配置
-SFLOWTOOL = '/usr/local/bin/sflowtool'
+SFLOWTOOL = 'sflowtool.exe'
 
 #创建子进程执行sflowtool命令
 sp = subprocess.Popen(SFLOWTOOL, stdout=subprocess.PIPE)

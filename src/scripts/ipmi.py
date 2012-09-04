@@ -17,7 +17,7 @@ for node in open(CWD + 'nodes'):
 		args = [IPMITOOL, '-H', ipmi_ip, '-I', 'lan', '-U', ipmi_user, '-P', ipmi_pass, 'sdr']
 		sp = subprocess.Popen(args, stdout=subprocess.PIPE)
 		data = {}
-		data['ip'] = ip
+		data['agent'] = ip
 		data['hostname'] = hostname
 		data['ipmi_ip'] = ipmi_ip
 		while time.time() < t0 + timeout:

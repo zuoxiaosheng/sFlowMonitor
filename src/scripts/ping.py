@@ -15,7 +15,7 @@ for node in open(CWD + 'nodes'):
 	timeout = 2
 	sp = subprocess.Popen([PING, '-c1', ip], stdout=subprocess.PIPE)
 	data = {}
-	data['ip'] = ip
+	data['agent'] = ip
 	data['hostname'] = hostname
 	while time.time() < t0 + timeout:
 		if sp.poll() != None:
