@@ -4,7 +4,7 @@ import time
 import subprocess
 import sys
 
-CWD = '/root/monitor/'
+CWD = '/root/Monitor/'
 sys.path.append(CWD)
 
 PING = '/bin/ping'
