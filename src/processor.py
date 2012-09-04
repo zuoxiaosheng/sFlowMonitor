@@ -94,7 +94,7 @@ def cluster_process():
 	host = db['host_1_1d']
 	now = int(time.time())
 	key = {'UUID':1}
-	condition = {'unixSecondsUTC': {"$gte": now-STEP, "$lt": now}}
+	condition = {'unixSecondsUTC': {"$gte": now-2*STEP, "$lt": now}}
 	initial = {'unixSecondsUTC': 0}
 	reduce = 'function (doc, prev) {'
 	reduce += 'if (doc.unixSecondsUTC > prev.unixSecondsUTC) {'
