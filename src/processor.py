@@ -18,6 +18,8 @@ def cpu_util(data, document):
 			data[metric] = round((data[metric] - document[metric])/cpu_total*100, 2)
 			if data[metric] <0:
 				data[metric] == 0.00
+			elif data[metric] > 100:
+				data[metric] = 100.00
 	else:
 		for metric in cpu_metrics:
 			data[metric] = 0.00
@@ -31,6 +33,8 @@ def vcpu_util(data, document):
 		data['vcpu_cpu_mS'] = round((data['vcpu_cpu_mS'] - document['vcpu_cpu_mS'])/(total*1000)*100, 2)
 		if data['vcpu_cpu_mS'] < 0:
 			data['vcpu_cpu_mS'] = 0.00
+		elif data['vcpu_cpu_mS'] > 100:
+			data['vcpu_cpu_mS'] = 100.00
 	else:
 		data['vcpu_cpu_mS'] = 0.00
 	return data
