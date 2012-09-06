@@ -4,10 +4,9 @@
 import time, sched
 from config import db, RRA, CATEGORY
 
-now = int(time.time())
-
 #保证监控数据的固定时间长度
 def data_fixed_length():
+	now = int(time.time())
 	for i in CATEGORY:
 		db[i].remove({'unixSecondsUTC': {"$lt": now-24*60*60}})
 		if i != 'flow':
