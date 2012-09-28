@@ -27,14 +27,12 @@ def init():
 		db[cname].ensure_index([('agent', pymongo.ASCENDING), ('ifIndex', pymongo.ASCENDING), ('unixSecondsUTC', pymongo.ASCENDING)])
 
 	db['ext'].ensure_index([('unixSecondsUTC', pymongo.ASCENDING), ('agent', pymongo.ASCENDING)])
-	db['ext'].ensure_index([('agent', pymongo.ASCENDING)], ('unixSecondsUTC', pymongo.ASCENDING))
+	db['ext'].ensure_index([('agent', pymongo.ASCENDING), ('unixSecondsUTC', pymongo.ASCENDING)])
 	for item in RRA:
 		cname = 'ext_' + str(item[0]) + '_' + item[1]
 		db[cname].ensure_index([('unixSecondsUTC', pymongo.ASCENDING), ('agent', pymongo.ASCENDING)])
 		db[cname].ensure_index([('agent', pymongo.ASCENDING), ('unixSecondsUTC', pymongo.ASCENDING)])
 	
-	db['cluster'].ensure_index([('unixSecondsUTC', pymongo.ASCENDING), ('UUID', pymongo.ASCENDING)])
-	db['cluster'].ensure_index([('UUID', pymongo.ASCENDING), ('unixSecondsUTC', pymongo.ASCENDING)])
 	for item in RRA:
 		cname = 'cluster_' + str(item[0]) + '_' + item[1]
 		db[cname].ensure_index([('unixSecondsUTC', pymongo.ASCENDING), ('UUID', pymongo.ASCENDING)])
