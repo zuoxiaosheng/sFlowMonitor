@@ -23,17 +23,17 @@ def data_insert(header, data):
 		logger.info('receive flow data from %s' %(header['agent']))
 		category = 'flow'
 	if data.has_key('disk_total'):
-		logger.info('receive host data from %s:%s' %(header['agent'],item['hostname']))
+		logger.info('receive host data from %s:%s' %(header['agent'],data['hostname']))
 		category = 'host'
 	if data.has_key('vdsk_capacity'):
-		logger.info('receive vm data from %s:%s' %(header['agent'],item['hostname']))
+		logger.info('receive vm data from %s:%s' %(header['agent'],data['hostname']))
 		category = 'vm'
 	if data.has_key('ifIndex'):
 		logger.info('receive switch data from %s' %(header['agent']))
 		category = 'switch'
 	db[category].insert(data)
 
-if __name__ == '__main__':
+def collect():
 	#创建子进程执行sflowtool命令
 	sp = subprocess.Popen(SFLOWTOOL, stdout=subprocess.PIPE)
 	while True:

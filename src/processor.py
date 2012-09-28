@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
 
-import time, sched, threading
+import time
 from config import logger, METRICS, STEP, db
 
 
@@ -161,36 +161,3 @@ def meter_process(data):
 					  'memTotal': item['vmem_memory'], 'diskTotal': item['vdsk_capacity'], 
 					  'bytesIn': item['vnio_bytes_in']*STEP*30, 'bytesOut': item['vnio_bytes_out']*STEP*30}
 		db['meter'].insert(meter_data)
-
-def perform(s, inc, func, args):
-    s.enter(inc,0,perform,(s, inc, func, args))
-    func(**args)
-   
-def schedule(s, inc, func, args):
-    s.enter(0,0,perform,(s, inc, func, args))
-    s.run()
-
-if __name__ == '__main__':
-	RRA = [(3, '1w'), (15, '1m'), (30, '1y')]
-	CATEGORY = [('host',{'UUID':1}), ('vm',{'UUID':1}), ('switch',{'agent':1, 'ifIndex':1}), ('ext', {'agent':1})]
-	thread_pool = []
-	for i in range(len(CATEGORY)):
-		scheduler = sched.scheduler(time.time,time.sleep)
-		func_args = {'category':CATEGORY[i][0], 'key':CATEGORY[i][1]}
-		th = threading.Thread(target=schedule, args=(scheduler, STEP, process, func_args))
-		thread_pool.append(th)
-		for j in range(len(RRA)):
-			scheduler = sched.scheduler(time.time,time.sleep)
-			func_args = {'category':CATEGORY[i][0], 'key':CATEGORY[i][1], 'n_step':RRA[j][0], 'time_flag':RRA[j][1]}
-			th = threading.Thread(target=schedule, args=(scheduler, STEP*RRA[j][0], aggregate, func_args))
-			thread_pool.append(th)	
-	scheduler = sched.scheduler(time.time,time.sleep)
-	th = threading.Thread(target=schedule, args=(scheduler, STEP, cluster_process, {}))
-	thread_pool.append(th)
-	for i in range(len(RRA)):
-		scheduler = sched.scheduler(time.time,time.sleep)
-		func_args = {'n_step':RRA[i][0], 'time_flag':RRA[i][1]}
-		th = threading.Thread(target=schedule, args=(scheduler, STEP*RRA[i][0], cluster_aggregate, func_args))
-		thread_pool.append(th)
-	for i in range(len(thread_pool)):
-		thread_pool[i].start()

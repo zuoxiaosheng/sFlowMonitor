@@ -25,6 +25,13 @@ RRA = [(1, '1d', 86400), (3, '1w', 604800), (15, '1m', 2592000), (30, '1y', 3075
 #数据库名称（站点名称）配置
 CLUSTER = 'vdc'
 CATEGORY = ['host', 'vm', 'switch', 'flow', 'ext', 'cluster']
+#数据库相关初始化
+connection = pymongo.Connection(MONGO_IP, MONGO_PORT)
+db = connection[CLUSTER]
+
+#sFlow相关配置
+SFLOWTOOL = '/usr/local/bin/sflowtool'
+
 #监控数据定义
 METRICS = {
 	'common': {
@@ -189,26 +196,3 @@ METRICS = {
 		'ping': { 'dst': 'GAUGE', 'group': 'other', 'type': 'float' },
 	}
 }
-
-#数据库相关初始化
-connection = pymongo.Connection(MONGO_IP, MONGO_PORT)
-db = connection[CLUSTER]
-host = db.host
-vm = db.vm
-switch = db.switch
-flow = db.flow
-host.ensure_index([('unixSecondsUTC', pymongo.ASCENDING), ('agent', pymongo.ASCENDING)])
-host.ensure_index([('agent', pymongo.ASCENDING), ('unixSecondsUTC', pymongo.ASCENDING)])
-vm.ensure_index([('unixSecondsUTC', pymongo.ASCENDING), ('agent', pymongo.ASCENDING), ('UUID', pymongo.ASCENDING)])
-vm.ensure_index([('agent', pymongo.ASCENDING), ('UUID', pymongo.ASCENDING), ('unixSecondsUTC', pymongo.ASCENDING)])
-switch.ensure_index([('unixSecondsUTC', pymongo.ASCENDING), ('agent', pymongo.ASCENDING), ('ifIndex', pymongo.ASCENDING)])
-switch.ensure_index([('agent', pymongo.ASCENDING), ('ifIndex', pymongo.ASCENDING), ('unixSecondsUTC', pymongo.ASCENDING)])
-
-#计量数据集合
-meter = db.meter
-
-#扩展监控数据集合
-ext = db.ext
-
-#sFlow相关配置
-SFLOWTOOL = '/usr/local/bin/sflowtool'
